@@ -1,0 +1,38 @@
+def dataset_pr():
+    data_set = np.load('.../*.npz')
+    data_set_y = np.array(data_set['y'])
+    data_set_x = np.array(data_set['X'])
+    data_set_x = data_set_x.T
+    data_set_x = data_set_x.flatten().tolist()
+    # using list comprehension
+    data_set_x = [data_set_x[i:i + 784] for i in range(0, len(data_set_x), 784)]
+    data_set_y = data_set_y.flatten().tolist()
+
+    #Make Smaller Dataset
+    #pairs = list(zip(data_set_x, data_set_y))  # make pairs out of the two lists
+    #pairs = random.sample(pairs, 2000)  # pick random pairs
+    #data_set_x, data_set_y = zip(*pairs)  # separate the pairs
+
+    data_frame = pd.DataFrame(columns=['pixel' + str(i) for i in range(784)])
+
+    for x in data_set_x:
+        data_frame.loc[len(data_frame)] = x
+
+    data_frame['target'] = data_set_y
+
+    x = data_frame.drop('target', axis=1).values
+    y = data_frame['target'].values
+
+    # target plot
+    target_count = data_frame['target'].value_counts().sort_index()
+    target_count.plot(kind='bar', title='Count (Classes)', color=['#5cb85c','#5bc0de'])
+    plt.show()
+
+    train_x, test_x, train_y, test_y = train_test_split(x, y, test_size=0.3, random_state=0, shuffle=True, stratify=y)
+
+    # Standard Data
+    sc_x = StandardScaler()
+    x = sc_x.fit_transform(x)
+    train_x = sc_x.transform(train_x)
+    test_x = sc_x.transform(test_x)
+    return x, y, train_x, train_y, test_x, test_y

@@ -1,0 +1,33 @@
+while 1==1:
+    section_question = int(input("For solving the problems Please enter Num 1 for Section 1, 2 for Section 2 :"))
+    dataset_r = dataset_pr()
+    if section_question == 1:
+        k_n = range(1, 31)
+        threads = []
+        k_scores = []
+        print("Metrics are available for KNN : ", "'minkowski(P = 1 'Manhatan')(P = 2 'euclousidan')(W = ('distance' or 'uniform'))' 'mahalanobis'")
+        #neighbor_num = int(input("Please the number of K factor : "))
+        metric = str(input("Please input Distance Metric : "))
+        w_factor = ''
+        p_factor = ''
+        if metric == 'minkowski':
+            w_factor = str(input("Please input the number of W factor for Minkowski : "))
+            p_factor = int(input("Please input the number of P factor for Minkowski : "))
+        for k in k_n:
+            output_r = (knn_cl(dataset_r[0], dataset_r[1], dataset_r[2], dataset_r[3], dataset_r[4], dataset_r[5], k, p_factor, metric, w_factor))
+            th = threading.Thread(k_scores.append(output_r[4]))
+            th.start()
+            threads.append(th)
+        plt.plot(k_n, k_scores)
+        plt.xlabel('Value of K for KNN')
+        plt.ylabel('Cross-Validated Accuracy')
+        plt.show()
+
+    if section_question == 2:
+        K_score = []
+        output_r = (svm_section(dataset_r[2], dataset_r[3], dataset_r[4], dataset_r[5]))
+        #th = threading.Thread()
+        #th = threading.Thread()
+        #th.start()
+        #threads.append(th)
+        print(output_r)

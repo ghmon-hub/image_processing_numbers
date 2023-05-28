@@ -1,0 +1,38 @@
+def svm_section(train_x, train_y, test_x, test_y):
+    rbf = svm.SVC(kernel='rbf', gamma=0.5, C=0.1)
+    rbf_f = rbf.fit(train_x, train_y)
+    poly = svm.SVC(kernel='poly', degree=3, C=1)
+    poly_f = poly.fit(train_x, train_y)
+    linear = svm.SVC(kernel='linear', degree=2, C=1)
+    linear_f = linear.fit(train_x, train_y)
+    poly_pred = poly_f.predict(test_x)
+    rbf_pred = rbf_f.predict(test_x)
+    linear_pred = linear_f.predict(test_x)
+    
+    poly_accuracy = accuracy_score(test_y, poly_pred)
+    poly_f1 = f1_score(test_y, poly_pred, average='weighted')
+    rbf_accuracy = accuracy_score(test_y, rbf_pred)
+    rbf_f1 = f1_score(test_y, rbf_pred, average='weighted')
+    linear_accuracy = accuracy_score(test_y, linear_pred)
+    linear_f1 = f1_score(test_y, linear_pred, average='weighted')
+
+    models_class = [poly, rbf, linear]
+    # Make it an OvR classifier
+    for mo_cl in models_class:
+        ovr_classifier = OneVsRestClassifier(mo_cl)
+        # Fit the data to the OvR classifier
+        ovr_classifier = ovr_classifier.fit(train_x, train_y)
+        ove_classifier_p = ovr_classifier.predict(test_x)
+        # Evaluate by means of a confusion matrix
+        cm = confusion_matrix(test_y, ove_classifier_p, labels=ovr_classifier.classes_)
+        disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=ovr_classifier.classes_)
+        disp.plot()
+        print()
+        print("Model :", mo_cl)
+        plt.show()
+        print('Accuracy (Polynomial Kernel): ', "%.2f" % (poly_accuracy*100))
+        print('F1 (Polynomial Kernel): ', "%.2f" % (poly_f1*100))
+        print('Accuracy (RBF Kernel): ', "%.2f" % (rbf_accuracy*100))
+        print('F1 (RBF Kernel): ', "%.2f" % (rbf_f1*100))
+        print('Accuracy (Linear Kernel): ', "%.2f" % (linear_accuracy*100))
+        print('F1 (Linear Kernel): ', "%.2f" % (linear_f1*100))

@@ -1,0 +1,10 @@
+#Make group of data by each class
+groups = data_frame.groupby('target')
+for group_name, group_df in groups:
+    print('Group Name:', group_name)
+    print(group_df.head())
+    #Here, you can perform any operations on the individual DataFrames
+
+    # You can also save each DataFrame to a file
+    filename = f'{group_name}.csv'
+    group_df.to_csv(filename, index=False)

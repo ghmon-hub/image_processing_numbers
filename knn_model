@@ -1,0 +1,26 @@
+def knn_cl(x, y, tr_x, tr_y, te_x, te_y, k_n, p_p, dis_met, w_weights):
+    k_scores =[]
+    if dis_met == 'minkowski':
+        model_name = 'KNN'+(' Diatance Metric = '+str(dis_met))+(' Power = '+ str(p_p))+(' K = '+ str(k_n))
+        cl_new = KNeighborsClassifier(n_neighbors=int(k), p=p_p, weights=w_weights, metric=dis_met)
+        model_fit = KNeighborsClassifier(n_neighbors=int(k), p=p_p, weights=w_weights, metric=dis_met).fit(tr_x, tr_y)
+        model_score = model_fit.score(te_x, te_y)
+        predict_x = model_fit.predict(te_x)
+        class_report = classification_report(te_y, predict_x)
+        scores = cross_val_score(cl_new, x, y, cv=10, scoring='accuracy')
+        k_scores.append(scores.mean())
+        con_mat = confusion_matrix(te_y, predict_x)
+        # pre_new = model_fit.predict(new_d_x)
+        return model_name, model_score, class_report, con_mat, k_scores  # pre_new
+    if dis_met == 'mahalanobis':
+        model_name = 'KNN'+(' Diatance Metric = '+str(dis_met))+(' Power = '+ str(p_p))+(' K = '+ str(k_n))
+        cl_new = KNeighborsClassifier(n_neighbors=int(k), metric=dis_met, metric_params={'VI': np.cov(x)})
+        model_fit = KNeighborsClassifier(n_neighbors=int(k), metric=dis_met, metric_params={'VI': np.cov(x)}).fit(tr_x, tr_y)
+        model_score = model_fit.score(te_x, te_y)
+        predict_x = model_fit.predict(te_x)
+        class_report = classification_report(te_y, predict_x)
+        scores = cross_val_score(cl_new, x, y, cv=10, scoring='accuracy')
+        k_scores.append(scores.mean())
+        con_mat = confusion_matrix(te_y, predict_x)
+        # pre_new = model_fit.predict(new_d_x)
+        return model_name, model_score, class_report, con_mat, k_scores  # pre_new
