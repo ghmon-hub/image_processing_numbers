@@ -5,3 +5,4 @@ As you know, the KNN algorithm is a multi-class classifier by nature. On the oth
 In this problem, you will solve this deficiency in the SVM algorithm by implementing the one-vs-one technique.
 *** we can use of ovo and ovr classifier ***
 *** we can make confusion matrix ***
+*** we should Transpose the matrxi of pixel ***
